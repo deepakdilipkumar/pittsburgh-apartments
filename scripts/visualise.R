@@ -27,3 +27,9 @@ pitsmap +
 geom_point(aes(x = Longitude, y = Latitude, size =RentPerPerson), data = apt) +
 geom_point(aes(x=lon, y=lat, color="red"), data=cmu)
 dev.off()
+
+pdf(file="Locality.pdf")
+pitsmap + 
+geom_point(aes(x = Longitude, y = Latitude, color=Locality), data = apt) +
+geom_point(aes(x=lon, y=lat, color="red"), data=cmu)
+dev.off()
