@@ -2,6 +2,10 @@ library(ggmap)
 
 apt <- read.csv('cleanedaptdata.csv', head=T) #,colClasses=c("character","character","character","character","character","character","character","character","character","character","character","character","numeric","numeric"))
 
+
+bf<-levels(factor(apt$Locality))[1]
+apt<-apt[apt$Locality!=bf & apt$Locality!="Point Breeze North",]
+
 latFactor <- factor(apt$Latitude)
 lonFactor <- factor(apt$Longitude)
 apt$Latitude <- as.numeric(levels(latFactor))[latFactor]		#Convert from character to numeric
@@ -32,4 +36,10 @@ pdf(file="Locality.pdf")
 pitsmap + 
 geom_point(aes(x = Longitude, y = Latitude, color=Locality), data = apt) +
 geom_point(aes(x=lon, y=lat, color="red"), data=cmu)
+dev.off()
+
+pdf(file="Rent Vs Locality.pdf")
+ggplot(apt,aes(RentPerPerson))+
+geom_histogram(binwidth=50)+facet_grid(Locality~.)+
+labs(x="Rent Per Person($)")
 dev.off()
