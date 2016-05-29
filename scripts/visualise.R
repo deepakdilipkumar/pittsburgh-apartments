@@ -48,6 +48,16 @@ facet_grid(Locality~.)+
 labs(x="Rent Per Person($)")
 dev.off()
 
+pdf(file="..//output//Rent w Utilities.pdf")
+vline.data<-data.frame(z=c("Yes","Partial","No"),vl=c(mean(apt[apt$Utlities=="Yes",]$RentPerPerson),mean(apt[apt$Utlities=="Partial",]$RentPerPerson),mean(apt[apt$Utlities=="No",]$RentPerPerson)))
+vline.data
+ggplot(apt,aes(RentPerPerson))+
+geom_histogram()+
+geom_vline(aes(xintercept=vl), data=vline.data)+
+facet_grid(Utlities~.)+
+labs(x="Rent Per Person($)")
+dev.off()
+
 apt<-apt[apt$WalkingTime<100,]
 
 pdf(file="..//output//Walking Time Vs Locality.pdf")
@@ -65,3 +75,4 @@ ggplot(aes(x=RentPerPerson,y=WalkingTime),data=apt)+
 geom_point()+
 geom_smooth(method="lm",se=FALSE)
 dev.off()
+
