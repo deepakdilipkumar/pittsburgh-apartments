@@ -1,6 +1,6 @@
 library(ggmap)
 
-apt <- read.csv('../data/cleanedaptdata.csv', head=T) #,colClasses=c("character","character","character","character","character","character","character","character","character","character","character","character","numeric","numeric"))
+	apt <- read.csv('../data/cleanedaptdata.csv', head=T) #,colClasses=c("character","character","character","character","character","character","character","character","character","character","character","character","numeric","numeric"))
 
 
 bf<-levels(factor(apt$Locality))[1]
@@ -39,9 +39,29 @@ geom_point(aes(x=lon, y=lat, color="red"), data=cmu)
 dev.off()
 
 pdf(file="..//output//Rent Vs Locality.pdf")
-vline.data=data.frame(z=c(mean(apt[apt$Locality=="Oakland",]$RentPerPerson),mean(apt[apt$Locality=="Shadyside",]$RentPerPerson),mean(apt[apt$Locality=="Squirrel Hill",]$RentPerPerson)),vs=c(0,0,0),am=c(0,1,2))
+vline.data<-data.frame(z=c("Oakland","Shadyside","Squirrel Hill"),vl=c(mean(apt[apt$Locality=="Oakland",]$RentPerPerson),mean(apt[apt$Locality=="Shadyside",]$RentPerPerson),mean(apt[apt$Locality=="Squirrel Hill",]$RentPerPerson)))
+vline.data
 ggplot(apt,aes(RentPerPerson))+
-geom_histogram(binwidth=50)+facet_grid(Locality~.)+
-labs(x="Rent Per Person($)")+
-geom_vline(aes(xintercept=z), vline.data)
+geom_histogram(binwidth=50)+
+geom_vline(aes(xintercept=vl), data=vline.data)+
+facet_grid(Locality~.)+
+labs(x="Rent Per Person($)")
+dev.off()
+
+apt<-apt[apt$WalkingTime<100,]
+
+pdf(file="..//output//Walking Time Vs Locality.pdf")
+vline.data<-data.frame(z=c("Oakland","Shadyside","Squirrel Hill"),vl=c(mean(apt[apt$Locality=="Oakland",]$WalkingTime),mean(apt[apt$Locality=="Shadyside",]$WalkingTime),mean(apt[apt$Locality=="Squirrel Hill",]$WalkingTime)))
+vline.data
+ggplot(apt,aes(WalkingTime))+
+geom_histogram()+
+geom_vline(aes(xintercept=vl), data=vline.data)+
+facet_grid(Locality~.)+
+labs(x="Walking Time(minutes)")
+dev.off()
+
+pdf(file="..//output//Walking Time Vs Rent Per Person.pdf")
+ggplot(aes(x=RentPerPerson,y=WalkingTime),data=apt)+
+geom_point()+
+geom_smooth(method="lm",se=FALSE)
 dev.off()
