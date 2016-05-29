@@ -39,8 +39,9 @@ geom_point(aes(x=lon, y=lat, color="red"), data=cmu)
 dev.off()
 
 pdf(file="..//output//Rent Vs Locality.pdf")
+vline.data=data.frame(z=c(mean(apt[apt$Locality=="Oakland",]$RentPerPerson),mean(apt[apt$Locality=="Shadyside",]$RentPerPerson),mean(apt[apt$Locality=="Squirrel Hill",]$RentPerPerson)),vs=c(0,0,0),am=c(0,1,2))
 ggplot(apt,aes(RentPerPerson))+
 geom_histogram(binwidth=50)+facet_grid(Locality~.)+
 labs(x="Rent Per Person($)")+
-geom_vline(aes(xintercept=mean(apt$RentPerPerson)), color="red")
+geom_vline(aes(xintercept=z), vline.data)
 dev.off()
